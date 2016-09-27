@@ -4,10 +4,10 @@ namespace Microsoft.ApplicationInsights.TestFramework
 {
     using System;
     using System.Collections.Generic;
-#if CORE_PCL || NET45 || NET46
+#if CORE_PCL || NET45 || NET46 || NETFX_CORE
     using System.Diagnostics.Tracing;
 #endif
-    using System.Globalization;
+	using System.Globalization;
     using System.Linq;
     using System.Reflection;
 #if NET40
@@ -39,8 +39,10 @@ namespace Microsoft.ApplicationInsights.TestFramework
                     VerifyEventId(eventMethod, actualEvent);
                     VerifyEventLevel(eventMethod, actualEvent);
                     VerifyEventMessage(eventMethod, actualEvent, eventArguments);
-                    VerifyEventApplicationName(eventMethod, actualEvent);
-                }
+#if !NETFX_CORE
+					VerifyEventApplicationName(eventMethod, actualEvent);
+#endif
+				}
                 catch (Exception e)
                 {
                     throw new Exception(eventMethod.Name + " is implemented incorrectly: " + e.Message, e);
@@ -66,13 +68,16 @@ namespace Microsoft.ApplicationInsights.TestFramework
             {
                 return "Test String";
             }
-
-            if (parameter.ParameterType.IsValueType)
-            {
-                return Activator.CreateInstance(parameter.ParameterType);
+#if NETFX_CORE
+			if (parameter.ParameterType.GetTypeInfo().IsValueType)
+#else
+			if (parameter.ParameterType.IsValueType)
+#endif
+			{
+				return Activator.CreateInstance(parameter.ParameterType);
             }
 
-            throw new NotSupportedException("Complex types are not suppored");
+            throw new NotSupportedException("Complex types are not supported");
         }
 
         private static void VerifyEventId(MethodInfo eventMethod, EventWrittenEventArgs actualEvent)
@@ -95,15 +100,15 @@ namespace Microsoft.ApplicationInsights.TestFramework
             string actualMessage = string.Format(CultureInfo.InvariantCulture, actualEvent.Message, actualEvent.Payload.ToArray());
             AssertEqual(expectedMessage, actualMessage, "Message");
         }
-
-        private static void VerifyEventApplicationName(MethodInfo eventMethod, EventWrittenEventArgs actualEvent)
+#if !NETFX_CORE  /// TODO Implement equivalent in .NET Core
+		private static void VerifyEventApplicationName(MethodInfo eventMethod, EventWrittenEventArgs actualEvent)
         {
             string expectedApplicationName = AppDomain.CurrentDomain.FriendlyName;
             string actualApplicationName = actualEvent.Payload.Last().ToString();
             AssertEqual(expectedApplicationName, actualApplicationName, "Application Name");
         }
-
-        private static void AssertEqual<T>(T expected, T actual, string message)
+#endif
+		private static void AssertEqual<T>(T expected, T actual, string message)
         {
             if (!expected.Equals(actual))
             {

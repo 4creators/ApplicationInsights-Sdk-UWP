@@ -4,11 +4,11 @@
     using System.IO;
     using System.Net;
     using System.Threading.Tasks;
-#if NET45 || NET46
+#if NET45 || NET46 || NETFX_CORE
     using TaskEx = System.Threading.Tasks.Task;
 #endif
 
-    internal class StubWebRequest : WebRequest
+	internal class StubWebRequest : WebRequest
     {
         public Func<string> OnGetContentType;
         public Action<string> OnSetContentType;

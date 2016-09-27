@@ -107,7 +107,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\..\101CoreSnKeypair4096.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\..\..\101CoreSnKeypair4096.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
@@ -117,7 +117,7 @@
     <EmbeddedResource Include="Properties\TestFramework.NETCore10.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Core\Managed\PCL\Core.PCL.csproj">
+    <ProjectReference Include="..\..\..\..\src\Core\Managed\PCL\Core.PCL.csproj">
       <Project>{862b97af-f620-43fd-9b65-7e5423f3b7e3}</Project>
       <Name>Core.PCL</Name>
     </ProjectReference>

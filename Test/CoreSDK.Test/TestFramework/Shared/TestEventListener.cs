@@ -3,10 +3,10 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-#if CORE_PCL || NET45 || NET46
+#if CORE_PCL || NET45 || NET46 || NETFX_CORE 
     using System.Diagnostics.Tracing;
 #endif
-    using System.Threading;
+	using System.Threading;
 #if NET40
     using Microsoft.Diagnostics.Tracing;
 #endif
