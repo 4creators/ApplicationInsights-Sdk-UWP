@@ -4,21 +4,33 @@
     using System.Globalization;
     using System.Threading;
     using Microsoft.ApplicationInsights.TestFramework;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = Xunit.Assert;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
+	using Assert = Xunit.Assert;
 
     public class ExtensionsTest
     {
         [TestClass]
         public class ToInvariantString
         {
-            private CultureInfo originalUICulture = Thread.CurrentThread.CurrentUICulture;
+#if NETFX_CORE
+			private CultureInfo originalUICulture = CultureInfo.CurrentUICulture;
+#else
+			private CultureInfo originalUICulture = Thread.CurrentThread.CurrentUICulture;
+#endif
 
-            [TestCleanup]
+			[TestCleanup]
             public void Cleanup()
             {
-                Thread.CurrentThread.CurrentUICulture = this.originalUICulture;
-            }
+#if NETFX_CORE
+				CultureInfo.CurrentUICulture = this.originalUICulture;
+#else
+				Thread.CurrentThread.CurrentUICulture = this.originalUICulture;
+#endif
+			}
 
             [TestMethod]
             public void ExtractsStackTraceWithInvariantCultureToHelpOurTelemetryToolsMatchSimilarErrorsReportedByOSsWithDifferentLanguages()
@@ -27,8 +39,12 @@
                 var exception = new StubException();
                 exception.OnToString = () =>
                 {
-                    stackTraceCulture = Thread.CurrentThread.CurrentUICulture;
-                    return string.Empty;
+#if NETFX_CORE
+					stackTraceCulture = CultureInfo.CurrentUICulture;
+#else
+					stackTraceCulture = Thread.CurrentThread.CurrentUICulture;
+#endif
+					return string.Empty;
                 };
 
                 Extensions.ToInvariantString(exception);
@@ -40,8 +56,12 @@
             public void RestoresOriginalUICultureToPreserveGlobalStateOfApplication()
             {
                 Extensions.ToInvariantString(new Exception());
-                Assert.Same(this.originalUICulture, Thread.CurrentThread.CurrentUICulture);
-            }
+#if NETFX_CORE
+				Assert.Same(this.originalUICulture, CultureInfo.CurrentUICulture);
+#else
+				Assert.Same(this.originalUICulture, Thread.CurrentThread.CurrentUICulture);
+#endif
+			}
         }
     }
 }

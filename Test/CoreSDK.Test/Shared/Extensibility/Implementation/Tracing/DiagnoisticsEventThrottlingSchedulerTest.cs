@@ -2,9 +2,13 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
 
-    [TestClass]
+	[TestClass]
     public sealed class DiagnoisticsEventThrottlingSchedulerTest : IDisposable
     {
         private const int SchedulingRoutineRunInterval = 10;

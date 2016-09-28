@@ -50,7 +50,7 @@ namespace Microsoft.ApplicationInsights.Extensibility.Implementation
 
         void IDebugOutput.WriteLine(string message)
         {
-#if CORE_PCL
+#if CORE_PCL || NETFX_CORE
             Debug.WriteLine(message);
 #else
             Debugger.Log(0, "category", message + Environment.NewLine);
@@ -63,7 +63,7 @@ namespace Microsoft.ApplicationInsights.Extensibility.Implementation
             {
                 return false;
             }
-#if CORE_PCL
+#if CORE_PCL || NETFX_CORE
             return true;
 #else
             return Debugger.IsLogging();

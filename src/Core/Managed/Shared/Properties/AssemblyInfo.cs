@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("Microsoft.ApplicationInsights.Core.Net45.Tests" + AssemblyInfo.PublicKey)]
 [assembly: InternalsVisibleTo("Microsoft.ApplicationInsights.Core.Net46.Tests" + AssemblyInfo.PublicKey)]
 [assembly: InternalsVisibleTo("Microsoft.ApplicationInsights.Core.NetCore10.Tests" + AssemblyInfo.PublicKey)]
+[assembly: InternalsVisibleTo("Microsoft.ApplicationInsights.Core.Uwp.Tests" + AssemblyInfo.PublicKey)]
 
 [assembly: InternalsVisibleTo("Microsoft.ApplicationInsights.TestFramework" + AssemblyInfo.PublicKey)]
 

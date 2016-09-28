@@ -2,8 +2,12 @@
 {
     using Microsoft.ApplicationInsights.Channel;
     using AI;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = Xunit.Assert;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
+	using Assert = Xunit.Assert;
     
 
     [TestClass]

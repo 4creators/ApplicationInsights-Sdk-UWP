@@ -1,11 +1,17 @@
 ﻿namespace Microsoft.ApplicationInsights.Extensibility
 {
-    using System.Runtime.Remoting.Messaging;
+#if !NETFX_CORE
+	using System.Runtime.Remoting.Messaging;
+#endif
     using Implementation;
     using Microsoft.ApplicationInsights.DataContracts;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
 
-    [TestClass]
+	[TestClass]
     public class OperationCorrelationTelemetryInitializerTests
     {
         [TestMethod]

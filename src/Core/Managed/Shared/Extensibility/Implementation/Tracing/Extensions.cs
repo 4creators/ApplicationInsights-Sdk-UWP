@@ -17,20 +17,20 @@
         /// </summary>
         public static string ToInvariantString(this Exception exception)
         {
-#if !CORE_PCL
+#if !CORE_PCL && !NETFX_CORE
             CultureInfo originalUICulture = Thread.CurrentThread.CurrentUICulture;
             try
             {
                 Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 #endif
-            return exception.ToString();
-#if !CORE_PCL
+			return exception.ToString();
+#if !CORE_PCL && !NETFX_CORE
             }
             finally
             {
                 Thread.CurrentThread.CurrentUICulture = originalUICulture;
             }
 #endif
-        }
-    }
+		}
+	}
 }

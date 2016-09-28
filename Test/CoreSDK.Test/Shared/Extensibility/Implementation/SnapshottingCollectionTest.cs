@@ -71,8 +71,12 @@ namespace Microsoft.ApplicationInsights.Extensibility.Implementation
                 var target = new TestableSnapshottingCollection<object>(collection);
                 lock (collection)
                 {
-                    anotherThread = TaskEx.Run(() => target.Add(new object()));
-                    Assert.False(anotherThread.Wait(20));
+#if !NETFX_CORE
+					anotherThread = TaskEx.Run(() => target.Add(new object()));
+#else
+					anotherThread = Task.Run(() => target.Add(new object()));
+#endif
+					Assert.False(anotherThread.Wait(20));
                 }
 
                 Assert.True(anotherThread.Wait(20));
@@ -112,8 +116,12 @@ namespace Microsoft.ApplicationInsights.Extensibility.Implementation
                 var target = new TestableSnapshottingCollection<object>(collection);
                 lock (collection)
                 {
-                    anotherThread = TaskEx.Run(() => target.Clear());
-                    Assert.False(anotherThread.Wait(20));
+#if !NETFX_CORE
+					anotherThread = TaskEx.Run(() => target.Clear());
+#else
+					anotherThread = Task.Run(() => target.Clear());
+#endif
+					Assert.False(anotherThread.Wait(20));
                 }
 
                 Assert.True(anotherThread.Wait(20));
@@ -263,8 +271,12 @@ namespace Microsoft.ApplicationInsights.Extensibility.Implementation
                 var target = new TestableSnapshottingCollection<object>(collection);
                 lock (collection)
                 {
-                    anotherThread = TaskEx.Run(() => target.Remove(null));
-                    Assert.False(anotherThread.Wait(20));
+#if !NETFX_CORE
+					anotherThread = TaskEx.Run(() => target.Remove(null));
+#else
+					anotherThread = Task.Run(() => target.Remove(null));
+#endif
+					Assert.False(anotherThread.Wait(20));
                 }
 
                 Assert.True(anotherThread.Wait(20));

@@ -337,12 +337,12 @@
                 // invokes the Process in the first processor in the chain
                 this.configuration.TelemetryProcessorChain.Process(telemetry);
 
-#if !CORE_PCL
+#if !CORE_PCL && !NETFX_CORE
                 // logs rich payload ETW event for any partners to process it
                 RichPayloadEventSource.Log.Process(telemetry);
 #endif
-            }
-        }
+			}
+		}
 
         /// <summary>
         /// This method is an internal part of Application Insights infrastructure. Do not call.
@@ -462,7 +462,7 @@
 
         private string GetSdkVersion()
         {
-#if !CORE_PCL
+#if !CORE_PCL && !NETFX_CORE
             string versionStr = typeof(TelemetryClient).Assembly.GetCustomAttributes(false)
                     .OfType<AssemblyFileVersionAttribute>()
                     .First()

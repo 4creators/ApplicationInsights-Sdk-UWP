@@ -1,9 +1,13 @@
 ﻿namespace Microsoft.ApplicationInsights.Extensibility.Implementation
 {
     using System.Collections.Generic;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
 
-    using Assert = Xunit.Assert;
+	using Assert = Xunit.Assert;
 
     [TestClass]
     public class InternalContextTests

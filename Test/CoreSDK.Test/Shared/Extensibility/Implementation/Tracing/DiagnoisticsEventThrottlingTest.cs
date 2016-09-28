@@ -1,8 +1,12 @@
 ﻿namespace Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
 
-    [TestClass]
+	[TestClass]
     public class DiagnoisticsEventThrottlingTest
     {        
         private const int ThrottleAfterCountAsOne = 1;

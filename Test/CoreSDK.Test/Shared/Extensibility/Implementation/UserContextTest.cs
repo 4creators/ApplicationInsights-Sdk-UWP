@@ -3,13 +3,17 @@
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = Xunit.Assert;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
+	using Assert = Xunit.Assert;
 
-    /// <summary>
-    /// Portable tests for <see cref="UserContext"/>.
-    /// </summary>
-    [TestClass]
+	/// <summary>
+	/// Portable tests for <see cref="UserContext"/>.
+	/// </summary>
+	[TestClass]
     public class UserContextTest
     {
         [TestMethod]

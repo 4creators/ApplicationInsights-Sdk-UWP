@@ -8,8 +8,12 @@
 
     using Microsoft.ApplicationInsights.Extensibility.Implementation;
     using Microsoft.ApplicationInsights.TestFramework;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = Xunit.Assert;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
+	using Assert = Xunit.Assert;
 
     [TestClass]
     public class TelemetryConfigurationTest
@@ -101,8 +105,12 @@
                 var tasks = new Task[8];
                 for (int i = 0; i < tasks.Length; i++)
                 {
-                    tasks[i] = TaskEx.Run(() => TelemetryConfiguration.Active);
-                }
+#if !NETFX_CORE
+					tasks[i] = TaskEx.Run(() => TelemetryConfiguration.Active);
+#else
+					tasks[i] = Task.Run(() => TelemetryConfiguration.Active);
+#endif
+				}
 
                 Task.WaitAll(tasks);
                 Assert.Equal(1, numberOfInstancesInitialized);

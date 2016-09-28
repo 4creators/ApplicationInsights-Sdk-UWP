@@ -5,8 +5,12 @@
     using Microsoft.ApplicationInsights.Channel;
     using Microsoft.ApplicationInsights.DataContracts;
     using Microsoft.ApplicationInsights.Extensibility;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Extensibility.Implementation;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
+	using Extensibility.Implementation;
     using TestFramework;
 
     [TestClass]
@@ -58,8 +62,10 @@
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void StartDependencyTrackingThrowsExceptionWithNullTelemetryClient()
+#if !WINDOWS_UWP
+		[ExpectedException(typeof(ArgumentNullException))]
+#endif
+		public void StartDependencyTrackingThrowsExceptionWithNullTelemetryClient()
         {
             TelemetryClient tc = null;
             tc.StartOperation<DependencyTelemetry>(null);
@@ -142,8 +148,10 @@
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void StopDependencyTrackingThrowsExceptionWithNullTelemetryClient()
+#if !WINDOWS_UWP
+		[ExpectedException(typeof(ArgumentNullException))]
+#endif
+		public void StopDependencyTrackingThrowsExceptionWithNullTelemetryClient()
         {
             var operationItem = new AsyncLocalBasedOperationHolder<DependencyTelemetry>(this.telemetryClient, new DependencyTelemetry());
             TelemetryClient tc = null;

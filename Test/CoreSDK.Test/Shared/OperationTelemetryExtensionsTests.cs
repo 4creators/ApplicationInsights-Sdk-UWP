@@ -1,15 +1,20 @@
 ﻿namespace Microsoft.ApplicationInsights
 {
-    using System;
-    using System.Threading;
-    using Microsoft.ApplicationInsights.DataContracts;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = Xunit.Assert;
+	using System;
+	using System.Threading;
+	using Microsoft.ApplicationInsights.DataContracts;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
+	using Assert = Xunit.Assert;
+	using System.Threading.Tasks;
 
-    /// <summary>
-    /// Tests corresponding to OperationExtension methods.
-    /// </summary>
-    [TestClass]
+	/// <summary>
+	/// Tests corresponding to OperationExtension methods.
+	/// </summary>
+	[TestClass]
     public class OperationTelemetryExtensionsTests
     {
         /// <summary>
@@ -47,7 +52,8 @@
         {
             var telemetry = new DependencyTelemetry();
             telemetry.Start();
-            Thread.Sleep(2000);
+            //Thread.Sleep(2000);
+			Task.Delay(2000).Wait();
             Assert.Equal(TimeSpan.Zero, telemetry.Duration);
             telemetry.Stop();
             Assert.True(telemetry.Duration.TotalMilliseconds > 0);

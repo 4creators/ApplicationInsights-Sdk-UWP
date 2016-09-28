@@ -8,10 +8,18 @@
     using Microsoft.ApplicationInsights.Channel;
     using Microsoft.ApplicationInsights.DataContracts;
     using Microsoft.ApplicationInsights.Extensibility;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = Xunit.Assert;
-    using TestFramework;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
+	using Assert = Xunit.Assert;
+	using TestFramework;
 
+	// .NET Core on UWP does not support System.Threading.Thread yet, it is planned for v1.2
+	// Issue #2576 https://github.com/dotnet/corefx/issues/2576
+	/// TODO - enable for .NET Core v1.2 when available in UWP
+#if !WINDOWS_UWP
     /// <summary>
     /// Tests corresponding to TelemetryClientExtension methods.
     /// </summary>
@@ -136,4 +144,6 @@
             }
         }
     }
+
+#endif
 }

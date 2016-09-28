@@ -89,7 +89,7 @@
         {
             if (value.HasValue)
             {
-#if NET45 || NET46
+#if NET45 || NET46 || NETFX_CORE
                 this.WriteProperty(name, value.Value.ToString(string.Empty, CultureInfo.InvariantCulture));
 #else
                 this.WriteProperty(name, value.Value.ToString(CultureInfo.InvariantCulture, string.Empty));

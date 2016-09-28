@@ -1,9 +1,13 @@
 ﻿namespace Microsoft.ApplicationInsights.Extensibility.Implementation
 {
     using Microsoft.ApplicationInsights.DataContracts;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
+	using Newtonsoft.Json;
+	using Newtonsoft.Json.Linq;
     using Assert = Xunit.Assert;
 
     /// <summary>

@@ -2,8 +2,12 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Mocks;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
+	using Mocks;
 
     [TestClass]
     public class DiagnoisticsEventThrottlingManagerInitializationTest

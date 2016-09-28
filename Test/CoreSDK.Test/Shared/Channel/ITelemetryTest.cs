@@ -5,9 +5,13 @@
     using System.Reflection;
     using Microsoft.ApplicationInsights.DataContracts;
     using AI;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
 
-    internal class ITelemetryTest<TTelemetry, TEndpointData> 
+	internal class ITelemetryTest<TTelemetry, TEndpointData> 
         where TTelemetry : ITelemetry, new()
         where TEndpointData : Domain
     {

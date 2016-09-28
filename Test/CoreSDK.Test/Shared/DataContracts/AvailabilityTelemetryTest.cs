@@ -8,8 +8,12 @@
     using Microsoft.ApplicationInsights.Extensibility.Implementation;
     using Microsoft.ApplicationInsights.Extensibility.Implementation.External;
     using Microsoft.ApplicationInsights.TestFramework;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = Xunit.Assert;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
+	using Assert = Xunit.Assert;
 
     [TestClass]
     public class AvailabilityTelemetryTest
@@ -109,7 +113,7 @@
         {
             AvailabilityTelemetry telemetry = new AvailabilityTelemetry();
 
-            Assert.Equal(telemetry.Data.result, TestResult.Pass);
+            Assert.Equal(telemetry.Data.result, Microsoft.ApplicationInsights.Extensibility.Implementation.External.TestResult.Pass);
         }
 
         [TestMethod]
@@ -118,7 +122,7 @@
             AvailabilityTelemetry telemetry = new AvailabilityTelemetry();
             telemetry.Success = false;
 
-            Assert.Equal(telemetry.Data.result, TestResult.Fail);
+            Assert.Equal(telemetry.Data.result, Microsoft.ApplicationInsights.Extensibility.Implementation.External.TestResult.Fail);
         }
 
         private AvailabilityTelemetry CreateAvailabilityTelemetry()

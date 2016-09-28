@@ -7,9 +7,15 @@
     using Microsoft.ApplicationInsights.Channel;
     using Microsoft.ApplicationInsights.Extensibility.Implementation.Platform;
     using Microsoft.ApplicationInsights.TestFramework;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+	using Windows.ApplicationModel;
+	using Windows.Storage;
+#endif
 
-    [TestClass]
+	[TestClass]
     public class PlatformTest
     {
         [TestCleanup]
@@ -78,12 +84,20 @@
         
         private static void DeleteConfigurationFile()
         {
-            File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ApplicationInsights.config"));
-        }
+#if !WINDOWS_UWP
+			File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ApplicationInsights.config"));
+#else
+			File.Delete(Path.Combine(Package.Current.InstalledLocation.Path, "ApplicationInsights.config"));
+#endif
+		}
 
-        private static Stream OpenConfigurationFile()
+		private static Stream OpenConfigurationFile()
         {
-            return File.OpenWrite(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ApplicationInsights.config"));
-        }
-    }
+#if !WINDOWS_UWP
+			return File.OpenWrite(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ApplicationInsights.config"));
+#else
+			return File.OpenWrite(Path.Combine(Package.Current.InstalledLocation.Path, "ApplicationInsights.config"));
+#endif
+		}
+	}
 }

@@ -8,11 +8,15 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.ApplicationInsights.TestFramework;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = Xunit.Assert;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
+	using Assert = Xunit.Assert;
     using AssertEx = Xunit.AssertEx;
 
-    public class TransmissionTest : AsyncTest
+	public class TransmissionTest : AsyncTest
     {
         private static Stream CreateStream(string text)
         {
@@ -161,8 +165,12 @@
                 {
                     var transmission = new TestableTransmission();
                     FieldInfo isSendingField = typeof(Transmission).GetField("isSending", BindingFlags.NonPublic | BindingFlags.Instance);
-                    isSendingField.SetValue(transmission, 1, BindingFlags.SetField | BindingFlags.NonPublic | BindingFlags.Instance, null, null);
-                    await AssertEx.ThrowsAsync<InvalidOperationException>(() => transmission.SendAsync());
+#if !NETFX_CORE
+					isSendingField.SetValue(transmission, 1, BindingFlags.SetField | BindingFlags.NonPublic | BindingFlags.Instance, null, null);
+#else
+					isSendingField.SetValue(transmission, 1);
+#endif
+					await AssertEx.ThrowsAsync<InvalidOperationException>(() => transmission.SendAsync());
                 });
             }
 
@@ -176,8 +184,12 @@
                     request.OnBeginGetRequestStream = (callback, state) =>
                     {
                         beginGetRequestStreamCount++;
-                        return TaskEx.FromResult<object>(null).AsAsyncResult(callback, request);
-                    };
+#if !NETFX_CORE
+						return TaskEx.FromResult<object>(null).AsAsyncResult(callback, request);
+#else
+						return Task.FromResult<object>(null).AsAsyncResult(callback, request);
+#endif
+					};
         
                     var transmission = new TestableTransmission { OnCreateRequest = uri => request };
         
@@ -251,8 +263,13 @@
                 var finishBeginGetRequestStream = new ManualResetEventSlim();
                 var request = new StubWebRequest();
                 request.OnAbort = () => requestAborted.Set();
-                request.OnBeginGetRequestStream = (callback, state) => TaskEx.Run(() => finishBeginGetRequestStream.Wait()).AsAsyncResult(callback, request);
-                var transmission = new TestableTransmission(timeout: TimeSpan.FromTicks(1));
+                request.OnBeginGetRequestStream = (callback, state) =>
+#if !NETFX_CORE
+					TaskEx.Run(() => finishBeginGetRequestStream.Wait()).AsAsyncResult(callback, request);
+#else
+					Task.Run(() => finishBeginGetRequestStream.Wait()).AsAsyncResult(callback, request);
+#endif
+				var transmission = new TestableTransmission(timeout: TimeSpan.FromTicks(1));
                 transmission.OnCreateRequest = uri => request;
 
                 Task sendAsync = transmission.SendAsync();
@@ -273,10 +290,13 @@
                     transmission.OnCreateRequest = uri => request;
         
                     await transmission.SendAsync();
-        
-                    await TaskEx.Delay(50); // Let timout detector finish
-        
-                    Assert.False(requestAborted);
+#if !NETFX_CORE
+					await TaskEx.Delay(50); // Let timout detector finish
+#else
+					await Task.Delay(50);
+#endif
+
+					Assert.False(requestAborted);
                 });
             }
         }

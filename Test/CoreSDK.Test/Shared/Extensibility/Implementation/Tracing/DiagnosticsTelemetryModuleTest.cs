@@ -1,7 +1,7 @@
 ﻿namespace Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing
 {
     using System;
-#if CORE_PCL || NET45 || NET46
+#if CORE_PCL || NET45 || NET46 || NETFX_CORE
     using System.Diagnostics.Tracing;
 #endif
     using System.Linq;
@@ -10,8 +10,12 @@
 #endif
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = Xunit.Assert;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
+	using Assert = Xunit.Assert;
 
     [TestClass]
     public class DiagnosticsTelemetryModuleTest
@@ -84,21 +88,30 @@
                 using (var cancellationTokenSource = new CancellationTokenSource())
                 {
                     var taskStarted = new AutoResetEvent(false);
-                    TaskEx.Run(() =>
-                    {
+#if !NETFX_CORE
+					TaskEx.Run(() =>
+#else
+					Task.Run(() =>
+#endif
+					{
                         taskStarted.Set();
                         while (!cancellationTokenSource.IsCancellationRequested)
                         {
                             queueSender.Send(new TraceEvent());
-                            Thread.Sleep(1);
+#if !NETFX_CORE
+
+							Thread.Sleep(1);
+#else
+							Task.Delay(1).Wait();
+#endif
                         }
                     }, cancellationTokenSource.Token);
 
                     taskStarted.WaitOne(TimeSpan.FromSeconds(5));
 
-                    Assert.DoesNotThrow(() => module.Initialize(new TelemetryConfiguration()));
+					module.Initialize(new TelemetryConfiguration());
 
-                    cancellationTokenSource.Cancel();
+					cancellationTokenSource.Cancel();
                 }
             }
         }

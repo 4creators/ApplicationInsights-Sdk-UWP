@@ -124,15 +124,19 @@
             }
         }
 
-        private static void DoesNotThrow(Exception exception)
+		private static void DoesNotThrow(Exception exception)
         {
             if (exception != null)
             {
-                throw new DoesNotThrowException(exception);
-            }
+#if !WINDOWS_UWP
+				throw new DoesNotThrowException(exception);
+#else
+				throw new AggregateException("Does not throw assert failed", new Exception[] { new XunitException(), exception });
+#endif
+			}
         }
 
-        private static Exception Throws(Type exceptionType, Exception exception)
+		private static Exception Throws(Type exceptionType, Exception exception)
         {
             if (exception == null)
             {

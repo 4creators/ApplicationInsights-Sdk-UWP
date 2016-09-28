@@ -22,7 +22,7 @@
             string name;
             try
             {
-#if !CORE_PCL
+#if !CORE_PCL && !NETFX_CORE
                 name = AppDomain.CurrentDomain.FriendlyName;
 #else
                 name = string.Empty;

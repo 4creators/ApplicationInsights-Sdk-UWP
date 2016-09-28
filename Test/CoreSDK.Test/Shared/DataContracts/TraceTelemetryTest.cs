@@ -5,12 +5,16 @@
     using System.Reflection;
     using Microsoft.ApplicationInsights.Channel;
     using Microsoft.ApplicationInsights.Extensibility.Implementation;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
 
-    using Assert = Xunit.Assert;
-    
+	using Assert = Xunit.Assert;
 
-    [TestClass]
+
+	[TestClass]
     public class TraceTelemetryTest
     {
         [TestMethod]

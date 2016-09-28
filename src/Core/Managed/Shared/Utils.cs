@@ -18,10 +18,10 @@
             {
                 return true;
             }
-#if !CORE_PCL
+#if !CORE_PCL && !NETFX_CORE
             return value.All(char.IsWhiteSpace);
 #else
-            return string.IsNullOrWhiteSpace(value);
+			return string.IsNullOrWhiteSpace(value);
 #endif
         }
 
@@ -61,7 +61,7 @@
         public static TimeSpan ValidateDuration(string value)
         {
             TimeSpan interval;
-#if NET45 || NET46
+#if NET45 || NET46 || NETFX_CORE
             if (!TimeSpan.TryParse(value, CultureInfo.InvariantCulture, out interval))
 #else
             if (!TimeSpanEx.TryParse(value, CultureInfo.InvariantCulture, out interval))

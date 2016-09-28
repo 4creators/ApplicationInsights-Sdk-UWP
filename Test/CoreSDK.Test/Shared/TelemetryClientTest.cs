@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
-#if CORE_PCL || NET45 || NET46
+#if CORE_PCL || NET45 || NET46 || NETFX_CORE
     using System.Diagnostics.Tracing;
 #endif
     using System.Linq;
@@ -427,7 +427,7 @@
                 TelemetryChannel = channel
             };
 
-            Assert.DoesNotThrow(() => new TelemetryClient().Track(new StubTelemetry()));
+            new TelemetryClient().Track(new StubTelemetry());
         }
 
         [TestMethod]
@@ -441,7 +441,7 @@
             
             string expectedKey = Guid.NewGuid().ToString();
             configuration.InstrumentationKey = expectedKey;
-            Assert.DoesNotThrow(() => client.TrackTrace("Test Message"));
+            client.TrackTrace("Test Message");
 
             Assert.Equal(expectedKey, sentTelemetry.Context.InstrumentationKey);
         }
@@ -536,7 +536,7 @@
             telemetryInitializer.OnInitialize = item => { throw new Exception(); };
             configuration.TelemetryInitializers.Add(telemetryInitializer);
             var client = new TelemetryClient(configuration);
-            Assert.DoesNotThrow(() => client.Track(new StubTelemetry()));
+            client.Track(new StubTelemetry());
         }
 
         [TestMethod]
@@ -611,7 +611,7 @@
             var configuration = new TelemetryConfiguration { TelemetryChannel = channel, InstrumentationKey = "Test Key" };
             var client = new TelemetryClient(configuration);
 
-            Assert.DoesNotThrow(() => client.Track(new SessionStateTelemetry()));
+            client.Track(new SessionStateTelemetry());
         }
 
         [TestMethod]
@@ -772,10 +772,10 @@
         public void TrackAddsSdkVerionByDefault()
         {
             // split version by 4 numbers manually so we do not do the same as in the product code and actually test it
-            string versonStr = Assembly.GetAssembly(typeof(TelemetryConfiguration)).GetCustomAttributes(false)
-                    .OfType<AssemblyFileVersionAttribute>()
-                    .First()
-                    .Version;
+            string versonStr = typeof(TelemetryConfiguration).GetTypeInfo().Assembly
+				.GetCustomAttributes<AssemblyFileVersionAttribute>()
+                .First()
+                .Version;
             string[] versionParts = new Version(versonStr).ToString().Split('.');
 
             var configuration = new TelemetryConfiguration { TelemetryChannel = new StubTelemetryChannel(), InstrumentationKey = Guid.NewGuid().ToString() };

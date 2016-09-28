@@ -6,7 +6,7 @@ namespace Microsoft.ApplicationInsights.DataContracts
     /// <summary>
     /// This exception is used to notify the user that the set of inner exceptions has been trimmed because it exceeded our allowed send limit.
     /// </summary>
-#if !CORE_PCL 
+#if !(CORE_PCL || NETFX_CORE)
     [Serializable]
 #endif
     internal class InnerExceptionCountExceededException : 
@@ -36,7 +36,7 @@ namespace Microsoft.ApplicationInsights.DataContracts
             : base(message, innerException)
         {
         }
-#if !CORE_PCL
+#if !(CORE_PCL || NETFX_CORE)
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InnerExceptionCountExceededException"/> class with serialized data.
@@ -47,5 +47,5 @@ namespace Microsoft.ApplicationInsights.DataContracts
         {
         }
 #endif
-    }
+	}
 }

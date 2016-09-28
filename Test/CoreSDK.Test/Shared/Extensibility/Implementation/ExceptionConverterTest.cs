@@ -6,8 +6,12 @@
     using System.Runtime.CompilerServices;
 
     using Microsoft.ApplicationInsights.Extensibility.Implementation.External;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = Xunit.Assert;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
+	using Assert = Xunit.Assert;
 
     /// <summary>
     /// Tests of exception stack serialization.
@@ -66,9 +70,13 @@
             var exp = this.CreateException(1);
 
             StackTrace st = new StackTrace(exp, true);
-            var frame = st.GetFrame(0);
-            var line = frame.GetFileLineNumber();
-            var fileName = frame.GetFileName();
+#if !NETFX_CORE
+			var frame = st.GetFrame(0);
+#else
+			var frame = st.GetFrames()[0];
+#endif
+			var line = frame.GetFileLineNumber();
+			var fileName = frame.GetFileName();
 
             ExceptionDetails expDetails = ExceptionConverter.ConvertToExceptionDetails(exp, null);
             var stack = expDetails.parsedStack;
@@ -85,7 +93,9 @@
             }
         }
 
-        [TestMethod]
+		/// TODO port  Assembly.GetExecutingAssembly().FullName; to UWP
+#if !WINDOWS_UWP
+		[TestMethod]
         public void CheckThatAssemblyNameHasCorrectValue()
         {
             var exp = this.CreateException(2);
@@ -99,8 +109,9 @@
                 Assert.Equal(assemblyFullName.ToLowerInvariant(), stackFrame.assembly.ToLowerInvariant());
             }
         }
+#endif
 
-        [TestMethod]
+		[TestMethod]
         public void CheckLevelCorrespondsToFrameForLongStack()
         {
             const int NumberOfStackFrames = 100;

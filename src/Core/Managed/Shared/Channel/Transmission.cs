@@ -4,16 +4,16 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Net;
-#if CORE_PCL
+#if CORE_PCL || NETFX_CORE
     using System.Net.Http;
     using System.Net.Http.Headers;
 #endif
-    using System.Threading;
+	using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.ApplicationInsights.Extensibility.Implementation;
     using Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing;
 
-#if CORE_PCL || NET45 || NET46
+#if CORE_PCL || NET45 || NET46 || NETFX_CORE
     using TaskEx = System.Threading.Tasks.Task;
 #endif
 
@@ -26,7 +26,7 @@
         internal const string ContentEncodingHeader = "Content-Encoding";
 
         private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(100);
-#if CORE_PCL
+#if CORE_PCL || NETFX_CORE
         private readonly HttpClient client;
 #endif
         private int isSending;
@@ -57,8 +57,8 @@
             this.ContentEncoding = contentEncoding;
             this.Timeout = timeout == default(TimeSpan) ? DefaultTimeout : timeout;
             this.Id = Convert.ToBase64String(BitConverter.GetBytes(WeakConcurrentRandom.Instance.Next()));
-#if CORE_PCL
-            this.client = new HttpClient() { Timeout = this.Timeout };
+#if CORE_PCL || NETFX_CORE
+			this.client = new HttpClient() { Timeout = this.Timeout };
 #endif
         }
 
@@ -140,7 +140,7 @@
 
             try
             {
-#if CORE_PCL
+#if CORE_PCL || NETFX_CORE
                 using (MemoryStream contentStream = new MemoryStream(this.Content))
                 {
                     HttpRequestMessage request = this.CreateRequestMessage(this.EndpointAddress, contentStream);
@@ -170,7 +170,7 @@
             }
         }
 
-#if CORE_PCL
+#if CORE_PCL || NETFX_CORE
         /// <summary>
         /// Creates an http request for sending a transmission.
         /// </summary>

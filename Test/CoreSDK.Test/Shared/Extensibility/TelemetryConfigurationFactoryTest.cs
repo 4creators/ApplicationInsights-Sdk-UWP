@@ -12,10 +12,14 @@
     using Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing;
     using Microsoft.ApplicationInsights.TestFramework;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Assert = Xunit.Assert;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
+	using Assert = Xunit.Assert;
 
-    [TestClass]
+	[TestClass]
     public class TelemetryConfigurationFactoryTest
     {
         #region Instance
@@ -574,12 +578,10 @@
             var modules = new TestableTelemetryModules();
             modules.Modules.Add(module);
 
-            Assert.DoesNotThrow(
-                () =>
-                    new TestableTelemetryConfigurationFactory().Initialize(
+            new TestableTelemetryConfigurationFactory().Initialize(
                         new TelemetryConfiguration(), 
                         modules,
-                        configFileContents));
+                        configFileContents);
         }
 
         #endregion
@@ -670,7 +672,7 @@
                 </List>");
 
             var instances = new List<int>();
-            Assert.DoesNotThrow(() => TestableTelemetryConfigurationFactory.LoadInstances(definition, instances, null));
+            TestableTelemetryConfigurationFactory.LoadInstances(definition, instances, null);
 
             Assert.Equal(new[] { 42 }, instances);
         }
@@ -694,7 +696,7 @@
         public void LoadPropertiesReturnsNullWhenInstanceDoesNotHavePropertyWithSpecifiedName()
         {
             var definition = new XElement("Definition", new XElement("InvalidProperty", "AnyValue"));
-            Assert.DoesNotThrow(() => TestableTelemetryConfigurationFactory.LoadProperties(definition, new StubClassWithProperties(), null));
+            TestableTelemetryConfigurationFactory.LoadProperties(definition, new StubClassWithProperties(), null);
         }
 
         [TestMethod]
@@ -702,7 +704,7 @@
         {
             string configuration = Configuration("<UnknownSection/>");
             XElement aplicationInsightsElement = XDocument.Parse(configuration).Root;
-            Assert.DoesNotThrow(() => TestableTelemetryConfigurationFactory.LoadProperties(aplicationInsightsElement, new TelemetryConfiguration(), null));
+            TestableTelemetryConfigurationFactory.LoadProperties(aplicationInsightsElement, new TelemetryConfiguration(), null);
         }
 
         [TestMethod]
@@ -737,7 +739,7 @@
         {
             XElement definition = XDocument.Parse(Configuration(@"<TelemetryModules/>")).Root;
             var instance = new TelemetryConfiguration();
-            Assert.DoesNotThrow(() => TestableTelemetryConfigurationFactory.LoadProperties(definition, instance, null));
+            TestableTelemetryConfigurationFactory.LoadProperties(definition, instance, null);
         }
 
         [TestMethod]
@@ -769,7 +771,7 @@
 
             var instance = new StubClassWithProperties();
 
-            Assert.DoesNotThrow(() => TestableTelemetryConfigurationFactory.LoadProperties(definition, instance, null));
+            TestableTelemetryConfigurationFactory.LoadProperties(definition, instance, null);
         }
 
         [TestMethod]
@@ -812,7 +814,7 @@
                  </TelemetryChannel>")).Root;
 
             var instance = new TelemetryConfiguration();
-            Assert.DoesNotThrow(() => TestableTelemetryConfigurationFactory.LoadProperties(definition, instance, null));
+            TestableTelemetryConfigurationFactory.LoadProperties(definition, instance, null);
             return instance;
         }
 

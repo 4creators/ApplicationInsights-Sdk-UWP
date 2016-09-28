@@ -1,13 +1,17 @@
 ﻿namespace Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing
 {
-#if CORE_PCL || NET45 || NET46
+#if CORE_PCL || NET45 || NET46 || NETFX_CORE
     using System.Diagnostics.Tracing;
 #endif
 #if NET40
     using Microsoft.Diagnostics.Tracing;
 #endif
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Mocks;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
+	using Mocks;
 
     [TestClass]
     public class F5DiagnosticsSenderTest
