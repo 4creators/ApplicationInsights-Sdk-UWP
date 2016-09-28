@@ -1,18 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <!--<Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />-->
+  <Import Project="..\..\..\..\packages\Bond.CSharp.4.2.1\build\Bond.CSharp.props" Condition="Exists('..\..\..\..\packages\Bond.CSharp.4.2.1\build\Bond.CSharp.props')" />
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), 'Test.props'))\Test.props" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B01D0B92-DC4C-41F3-AD00-10E910DEA8A4}</ProjectGuid>
+    <ProjectGuid>{D2E5DC9D-5AD2-49D1-B48E-2BF1675FD403}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestFramework.NETCore10</RootNamespace>
-    <AssemblyName>TestFramework.NETCore10</AssemblyName>
+    <RootNamespace>ApplicationInsightsTypes.Uwp</RootNamespace>
+    <AssemblyName>ApplicationInsightsTypes.Uwp</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -104,29 +105,106 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\..\..\101CoreSnKeypair4096.pfx</AssemblyOriginatorKeyFile>
+    <BondOptions>--collection-interfaces --using="DateTimeOffset=System.DateTimeOffset" --using="TimeSpan=System.TimeSpan" --using="Guid=System.Guid"</BondOptions>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\TestFramework.NETCore10.rd.xml" />
+    <EmbeddedResource Include="Properties\ApplicationInsightsTypes.Uwp.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\Core\Managed\Uwp\Core.Uwp.csproj">
-      <Project>{e05f20cd-4a14-412a-a5f6-599d25b7cbc8}</Project>
-      <Name>Core.Uwp</Name>
-    </ProjectReference>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\AvailabilityData.bond">
+      <Link>StackFrame.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\Base.bond">
+      <Link>Base.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\ContextTagKeys.bond">
+      <Link>ContextTagKeys.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\Data.bond">
+      <Link>Data.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\DataPoint.bond">
+      <Link>DataPoint.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\DataPointType.bond">
+      <Link>DataPointType.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\DependencyKind.bond">
+      <Link>DependencyKind.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\DependencySourceType.bond">
+      <Link>DependencySourceType.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\Domain.bond">
+      <Link>Domain.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\Envelope.bond">
+      <Link>Envelope.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\EventData.bond">
+      <Link>EventData.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\ExceptionData.bond">
+      <Link>ExceptionData.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\ExceptionDetails.bond">
+      <Link>ExceptionDetails.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\MessageData.bond">
+      <Link>MessageData.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\MetricData.bond">
+      <Link>MetricData.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\PageViewData.bond">
+      <Link>PageViewData.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\PageViewPerfData.bond">
+      <Link>PageViewPerfData.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\PerformanceCounterData.bond">
+      <Link>PerformanceCounterData.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\RemoteDependencyData.bond">
+      <Link>RemoteDependencyData.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\RequestData.bond">
+      <Link>RequestData.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\SessionState.bond">
+      <Link>SessionState.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\SessionStateData.bond">
+      <Link>SessionStateData.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\SeverityLevel.bond">
+      <Link>SeverityLevel.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\StackFrame.bond">
+      <Link>StackFrame.bond</Link>
+    </BondCodegen>
+    <BondCodegen Include="..\..\..\Schema\PublicSchema\TestResult.bond">
+      <Link>TestResult.bond</Link>
+    </BondCodegen>
+    <None Include="app.config" />
   </ItemGroup>
-  <Import Project="..\..\TestFramework\Shared\TestFramework.Shared.projitems" Label="Shared" Condition="Exists('..\Shared\TestFramework.Shared.projitems')" />
+  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="ItemType.cs" />
+    <Compile Include="TelemetryItem.cs" />
+    <Compile Include="TelemetryItemType.cs" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'Common.targets'))\Common.targets" />
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <Import Project="..\..\..\..\packages\Bond.CSharp.4.2.1\build\Bond.CSharp.targets" Condition="Exists('..\..\..\..\packages\Bond.CSharp.4.2.1\build\Bond.CSharp.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
