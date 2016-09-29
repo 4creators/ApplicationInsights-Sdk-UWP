@@ -73,10 +73,9 @@
 #if !WINDOWS_UWP
 			File.Delete(Path.Combine(Environment.CurrentDirectory, "ApplicationInsights.config"));
 #else
-			var task = ApplicationData.Current.LocalFolder.GetFileAsync("ApplicationInsights.config").AsTask();
-			task.Wait(10000);
-			if (task.IsCompleted && !task.IsFaulted)
-				task.Result.DeleteAsync(StorageDeleteOption.PermanentDelete).AsTask().Wait(10000);
+			string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "ApplicationInsights.config");
+			if (File.Exists(path))
+				File.Delete(path);
 #endif
 		}
 
@@ -90,7 +89,7 @@
 			if (task.IsCompleted && !task.IsFaulted)
 				return task.Result;
 			else
-				throw new System.IO.IOException(String.Empty, task.Exception);
+				throw new IOException(String.Empty, task.Exception);
 #endif
 		}
 	}
