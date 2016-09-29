@@ -41,6 +41,11 @@
 				}
 				catch(AggregateException aex)
 				{
+					Action<AggregateException> exit = (a) => {
+						CoreEventSource.Log.LogError(a.Message, "UWP");
+						throw a;
+					};
+
 					if (aex.InnerException != null)
 					{
 						switch (aex.InnerException.GetType().Name)
@@ -61,10 +66,12 @@
 								CoreEventSource.Log.ApplicationInsightsConfigNotFoundWarning(configFilePath);
 								break;
 							default:
-								CoreEventSource.Log.LogError(aex.Message, "UWP");
-								throw aex;
+								exit(aex);
+								break;
 						}
 					}
+					else exit(aex);
+
 				}
 			}
 			catch (FileNotFoundException)
