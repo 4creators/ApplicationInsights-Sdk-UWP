@@ -4,6 +4,7 @@
 	using System.IO;
     using System.Collections.Generic;
 	using System.Security;
+	using System.Threading.Tasks;
 	using Microsoft.ApplicationInsights.Extensibility.Implementation.External;
 	using Microsoft.ApplicationInsights.Extensibility.Implementation.Tracing;
 	using Windows.ApplicationModel;
@@ -22,16 +23,55 @@
         {
 			// Config file should be in the base directory of the app domain
 			string configFilePath = Path.Combine(Package.Current.InstalledLocation.Path, "ApplicationInsights.config");
-
-			var task = ApplicationData.Current.LocalFolder.OpenStreamForReadAsync("ApplicationInsights.config");
-			task.Wait(5000);
 			
 			try
 			{
-				if (task.IsCompleted && !task.IsFaulted)
+				Task<Stream> task = null;
+				try
 				{
-					using (var reader = new StreamReader(task.Result))
-						return reader.ReadToEnd();
+					task = ApplicationData.Current.LocalFolder.OpenStreamForReadAsync("ApplicationInsights.config");
+
+					task.Wait(15000);
+
+					if (task.IsCompleted && !task.IsFaulted)
+					{
+						using (var reader = new StreamReader(task.Result))
+							return reader.ReadToEnd();
+					}
+				}
+				catch(AggregateException aex)
+				{
+					Action<AggregateException> exit = (a) => {
+						CoreEventSource.Log.LogError(a.Message, "UWP");
+						throw a;
+					};
+
+					if (aex.InnerException != null)
+					{
+						switch (aex.InnerException.GetType().Name)
+						{
+							case "FileNotFoundException":
+								CoreEventSource.Log.ApplicationInsightsConfigNotFoundWarning(configFilePath);
+								break;
+							case "DirectoryNotFoundException":
+								CoreEventSource.Log.ApplicationInsightsConfigNotFoundWarning(configFilePath);
+								break;
+							case "IOException":
+								CoreEventSource.Log.ApplicationInsightsConfigNotFoundWarning(configFilePath);
+								break;
+							case "UnauthorizedAccessException":
+								CoreEventSource.Log.ApplicationInsightsConfigNotFoundWarning(configFilePath);
+								break;
+							case "SecurityException":
+								CoreEventSource.Log.ApplicationInsightsConfigNotFoundWarning(configFilePath);
+								break;
+							default:
+								exit(aex);
+								break;
+						}
+					}
+					else exit(aex);
+
 				}
 			}
 			catch (FileNotFoundException)
