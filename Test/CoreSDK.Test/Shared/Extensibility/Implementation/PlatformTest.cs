@@ -87,7 +87,10 @@
 #if !WINDOWS_UWP
 			File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ApplicationInsights.config"));
 #else
-			File.Delete(Path.Combine(Package.Current.InstalledLocation.Path, "ApplicationInsights.config"));
+			var task = ApplicationData.Current.LocalFolder.GetFileAsync("ApplicationInsights.config").AsTask();
+			task.Wait(10000);
+			if (task.IsCompleted && !task.IsFaulted)
+				task.Result.DeleteAsync(StorageDeleteOption.PermanentDelete).AsTask().Wait(10000);
 #endif
 		}
 
@@ -96,7 +99,12 @@
 #if !WINDOWS_UWP
 			return File.OpenWrite(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ApplicationInsights.config"));
 #else
-			return File.OpenWrite(Path.Combine(Package.Current.InstalledLocation.Path, "ApplicationInsights.config"));
+			var task = ApplicationData.Current.LocalFolder.OpenStreamForWriteAsync("ApplicationInsights.config", CreationCollisionOption.OpenIfExists);
+			task.Wait(10000);
+			if (task.IsCompleted && !task.IsFaulted)
+				return task.Result;
+			else
+				throw new System.IO.IOException(String.Empty, task.Exception);
 #endif
 		}
 	}

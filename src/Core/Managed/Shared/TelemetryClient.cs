@@ -467,14 +467,14 @@
                     .OfType<AssemblyFileVersionAttribute>()
                     .First()
                     .Version;
-            
+
 #else
-            string versionStr = typeof(TelemetryClient).GetTypeInfo().Assembly.GetCustomAttributes<AssemblyFileVersionAttribute>()
-                    .First()
-                    .Version;
+			string versionStr = typeof(TelemetryClient).GetTypeInfo().Assembly
+				.GetCustomAttribute<AssemblyFileVersionAttribute>()
+				.Version;
 #endif
 
-            Version version = new Version(versionStr);
+			Version version = new Version(versionStr);
             return VersionPrefix + version.ToString(3) + "-" + version.Revision;
         }
     }

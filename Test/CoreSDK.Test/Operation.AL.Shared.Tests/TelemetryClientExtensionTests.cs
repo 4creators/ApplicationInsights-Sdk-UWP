@@ -68,8 +68,12 @@
 		public void StartDependencyTrackingThrowsExceptionWithNullTelemetryClient()
         {
             TelemetryClient tc = null;
+#if !WINDOWS_UWP
             tc.StartOperation<DependencyTelemetry>(null);
-        }
+#else
+			Assert.ThrowsException<ArgumentNullException>(() => tc.StartOperation<DependencyTelemetry>(null));
+#endif
+		}
 
         [TestMethod]
         public void StartDependencyTrackingCreatesADependencyTelemetryItemWithTimeStamp()
@@ -155,10 +159,14 @@
         {
             var operationItem = new AsyncLocalBasedOperationHolder<DependencyTelemetry>(this.telemetryClient, new DependencyTelemetry());
             TelemetryClient tc = null;
+#if !WINDOWS_UWP
             tc.StopOperation(operationItem);
-        }
+#else
+			Assert.ThrowsException<ArgumentNullException>(() => tc.StopOperation(operationItem));
+#endif
+		}
 
-        [TestMethod]
+		[TestMethod]
         public void StopOperationDoesNotThrowExceptionIfParentOpertionIsStoppedBeforeChildOperation()
         {
             using (var parentOperation = this.telemetryClient.StartOperation<DependencyTelemetry>("operationName"))

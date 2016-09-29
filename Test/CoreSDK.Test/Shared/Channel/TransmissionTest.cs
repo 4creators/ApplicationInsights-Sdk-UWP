@@ -307,11 +307,11 @@
 
             public TestableTransmission(Uri endpointAddress = null, byte[] content = null, string contentType = null, string contentEncoding = null, TimeSpan timeout = default(TimeSpan))
                 : base(
-                    endpointAddress ?? new Uri("http://test.uri"),
+                    endpointAddress ?? new Uri("http://test.uri"),		// tests fail on .NET Core if url is not resolved by dns
                     content ?? new byte[1],
-                    contentType ?? "content/type",
-                    contentEncoding ?? "content/encoding",
-                    timeout)
+                    contentType ?? "text/xml",			// .NET Core implementation enforces valid content-type usage
+                    contentEncoding ?? "identity",      // .NET Core implementation enforces valid content-encoding usage
+					timeout)
             {
                 this.OnCreateRequest = base.CreateRequest;
             }

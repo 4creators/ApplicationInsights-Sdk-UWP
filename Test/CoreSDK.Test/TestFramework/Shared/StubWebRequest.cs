@@ -24,7 +24,7 @@
         public Func<AsyncCallback, object, IAsyncResult> OnBeginGetResponse;
         public Func<IAsyncResult, WebResponse> OnEndGetResponse;
 
-        private string contentType;
+        private string contentType = "text/xml";
         private WebHeaderCollection headers;
         private string method;
         private StubStream requestStream;
