@@ -348,14 +348,24 @@
 
             string[] expectedSequence = new string[]
                                             {
-                                                "1",
+#if !NETFX_CORE  // .NET Core differs from other .NET runtimes at exception message level
+												"1", 
                                                 "1.1",
                                                 "1.1.1",
                                                 "1.1.2",
                                                 "1.1.2.1",
                                                 "1.2",
                                                 "1.2.1"
-                                            };
+#else
+												"1 (1.1 (1.1.1) (1.1.2)) (1.2)",
+												"1.1 (1.1.1) (1.1.2)",
+												"1.1.1",
+												"1.1.2",
+												"1.1.2.1",
+												"1.2",
+												"1.2.1"
+#endif
+											};
 
             Assert.Equal(expectedSequence.Length, telemetry.Exceptions.Count);
             int counter = 0;
@@ -371,10 +381,16 @@
         {
             const int Overage = 5;
             List<Exception> innerExceptions = new List<Exception>();
-            for (int i = 0; i < Constants.MaxExceptionCountToSave + Overage; i++)
+#if NETFX_CORE
+			string aggregateMessage = "0 ";
+#endif
+			for (int i = 0; i < Constants.MaxExceptionCountToSave + Overage; i++)
             {
                 innerExceptions.Add(new Exception((i + 1).ToString(CultureInfo.InvariantCulture)));
-            }
+#if NETFX_CORE
+				aggregateMessage += $"({(i+1).ToString(CultureInfo.InvariantCulture)}) ";
+#endif
+			}
 
             AggregateException rootLevelException = new AggregateException("0", innerExceptions);
 
@@ -384,8 +400,17 @@
             int counter = 0;
             foreach (ExceptionDetails details in telemetry.Exceptions.Take(Constants.MaxExceptionCountToSave))
             {
-                Assert.Equal(counter.ToString(CultureInfo.InvariantCulture), details.message);
-                counter++;
+#if NETFX_CORE
+				if (counter == 0)
+				{
+					aggregateMessage = aggregateMessage.Trim();
+					Assert.Equal(aggregateMessage, details.message);
+				}
+				else
+#endif
+				Assert.Equal(counter.ToString(CultureInfo.InvariantCulture), details.message);
+
+				counter++;
             }
 
             ExceptionDetails first = telemetry.Exceptions.First();
