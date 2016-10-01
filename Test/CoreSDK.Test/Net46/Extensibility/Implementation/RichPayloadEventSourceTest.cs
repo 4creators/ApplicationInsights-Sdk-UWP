@@ -12,13 +12,17 @@
     using Channel;
     using Microsoft.ApplicationInsights.DataContracts;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System.Reflection;
+#if !WINDOWS_UWP
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+#else
+	using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#endif
+	using System.Reflection;
 
-    /// <summary>
-    /// Tests the rich payload event source tracking.
-    /// </summary>
-    [TestClass]
+	/// <summary>
+	/// Tests the rich payload event source tracking.
+	/// </summary>
+	[TestClass]
     public class RichPayloadEventSourceTest
     {
         /// <summary>
@@ -66,7 +70,13 @@
         [TestMethod]
         public void RichPayloadEventSourceExceptionSentTest()
         {
-            var exceptionTelemetry = new ExceptionTelemetry(new SystemException("Test"));
+            var exceptionTelemetry = new ExceptionTelemetry(
+#if !NETFX_CORE
+				new SystemException("Test")
+#else
+				new Exception("Test")
+#endif
+				);
             exceptionTelemetry.Data.exceptions[0].parsedStack = new External.StackFrame[] { new External.StackFrame() };
 
             this.DoTracking(
@@ -173,7 +183,7 @@
                     object[] tags = actualEvent.Payload[1] as object[];
                     foreach (object tagObject in tags)
                     {
-                        Dictionary<string, object> tag = (Dictionary<string, object>)tagObject;
+                        IDictionary<string, object> tag = (IDictionary<string, object>)tagObject;
                         Assert.IsNotNull(tag);
                         string key = (string)tag["Key"];
                         object value = tag["Value"];
@@ -220,12 +230,21 @@
                 var actualProperty = actualPropertiesEnumerator.Current;
                 Assert.AreEqual(expectedPropertiesEnumerator.Current.Name, actualPropertiesEnumerator.Current.Key);
 
-                if (!expectedProperty.PropertyType.IsValueType
+#if !NETFX_CORE
+				if (!expectedProperty.PropertyType.IsValueType
                     && !expectedProperty.PropertyType.IsPrimitive
-                    && expectedProperty.PropertyType != typeof(string))
+#else
+				if (!expectedProperty.PropertyType.GetTypeInfo().IsValueType
+                    && !expectedProperty.PropertyType.GetTypeInfo().IsPrimitive
+#endif
+					&& expectedProperty.PropertyType != typeof(string))
                 {
+#if !NETFX_CORE
                     if (expectedProperty.PropertyType.IsClass)
-                    {
+#else
+					if (expectedProperty.PropertyType.GetTypeInfo().IsClass)
+#endif
+					{
                         VerifyEventPayload(expectedProperty.PropertyType.GetProperties().AsEnumerable(), (IDictionary<string, object>)actualProperty.Value);
                     }
                     else
@@ -233,9 +252,12 @@
                         var enumerableType = GetEnumerableType(expectedProperty.PropertyType);
                         Assert.IsNotNull(enumerableType);
                         Assert.IsTrue(actualProperty.Value.GetType().IsArray);
-
+#if !NETFX_CORE
                         if (enumerableType.IsClass)
-                        {
+#else
+						if (enumerableType.GetTypeInfo().IsClass)
+#endif
+						{
                             VerifyEventPayload(enumerableType.GetProperties().AsEnumerable(), (IDictionary<string, object>)((object[])actualProperty.Value)[0]);
                         }
                     }
@@ -248,8 +270,12 @@
         {
             foreach (Type intType in type.GetInterfaces())
             {
-                if (intType.IsGenericType && intType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-                {
+#if !NETFX_CORE
+				if (intType.IsGenericType && intType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+#else
+				if (intType.GetTypeInfo().IsGenericType && intType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+#endif
+				{
                     return intType.GetGenericArguments()[0];
                 }
             }
@@ -258,22 +284,31 @@
 
         private static bool IsRunningOnEnvironmentSupportingRichPayloadEventSource()
         {
-#if NET40
+#if NET40 || WINDOWS_UWP
             // NET40 version uses EventSource in Microsoft.Diagnostics which supports RichPayloadEvent on .NET Framework 4.0/4.5/4.6+
             return true;
 #else
-            // Other versions depend on EventSource in .Net Framework 4.6+
-            string productVersionString = System.Diagnostics.FileVersionInfo.GetVersionInfo(typeof(object).Assembly.Location).ProductVersion;
+			// Other versions depend on EventSource in .Net Framework 4.6+
+			string productVersionString =
+#if !NETFX_CORE
+				System.Diagnostics.FileVersionInfo.GetVersionInfo(typeof(object).Assembly.Location).ProductVersion;
+#else
+				typeof(object).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
+#endif
 
-            Version ver;
+			Version ver;
             if (!Version.TryParse(productVersionString, out ver))
             {
                 Assert.Fail("Unable to determine .net framework version");
             }
 
-            var ver46 = new Version(4, 6, 0, 0);
+#if !NETFX_CORE
+			var ver46 = new Version(4, 6, 0, 0);
             return ver >= ver46;
+#else
+			throw new NotImplementedException();
 #endif
-        }
+#endif
+		}
     }
 }

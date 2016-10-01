@@ -229,11 +229,11 @@
 
         private void WriteEvent<T>(string eventName, string instrumentationKey, IDictionary<string, string> tags, T data, EventKeywords keywords)
         {
-            this.EventSourceInternal.Write(
-                eventName,
-                new EventSourceOptions() { Keywords = keywords },
-                new { PartA_iKey = instrumentationKey, PartA_Tags = tags, _B = data });
-        }
+			this.EventSourceInternal.Write(
+				eventName,
+				new EventSourceOptions() { Keywords = keywords },
+				new { PartA_iKey = instrumentationKey, PartA_Tags = tags, _B = data });
+		}
 
         /// <summary>
         /// Keywords for the RichPayloadEventSource.
