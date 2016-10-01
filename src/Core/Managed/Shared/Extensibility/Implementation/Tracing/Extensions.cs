@@ -17,19 +17,32 @@
         /// </summary>
         public static string ToInvariantString(this Exception exception)
         {
-#if !CORE_PCL && !NETFX_CORE
-            CultureInfo originalUICulture = Thread.CurrentThread.CurrentUICulture;
-            try
-            {
-                Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-#endif
+#if CORE_PCL
 			return exception.ToString();
-#if !CORE_PCL && !NETFX_CORE
+#else
+			CultureInfo originalUICulture = null;
+#if !NETFX_CORE
+            originalUICulture = Thread.CurrentThread.CurrentUICulture;
+#elif NETFX_CORE
+			originalUICulture = CultureInfo.CurrentUICulture;
+#endif
+			try
+			{
+#if !NETFX_CORE
+				Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+#else
+				CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
+#endif
+				return exception.ToString();
             }
             finally
             {
+#if !NETFX_CORE
                 Thread.CurrentThread.CurrentUICulture = originalUICulture;
-            }
+#else
+				CultureInfo.CurrentUICulture = originalUICulture;
+#endif
+			}
 #endif
 		}
 	}

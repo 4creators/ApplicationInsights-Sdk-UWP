@@ -18,9 +18,13 @@
     /// </summary>
     public sealed class TelemetryClient
     {
-        private const string VersionPrefix = "dotnet:";
+#if !WINDOWS_UWP
+		private const string VersionPrefix = "dotnet:";
+#else
+		private const string VersionPrefix = "uwp:";
+#endif
 
-        private readonly TelemetryConfiguration configuration;
+		private readonly TelemetryConfiguration configuration;
         private TelemetryContext context;
         private string sdkVersion;
 
@@ -337,7 +341,7 @@
                 // invokes the Process in the first processor in the chain
                 this.configuration.TelemetryProcessorChain.Process(telemetry);
 
-#if !CORE_PCL && !NETFX_CORE
+#if !CORE_PCL
                 // logs rich payload ETW event for any partners to process it
                 RichPayloadEventSource.Log.Process(telemetry);
 #endif

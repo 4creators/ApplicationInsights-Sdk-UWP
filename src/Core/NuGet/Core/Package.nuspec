@@ -13,9 +13,9 @@
     <summary>Application Insights Core API. This package provides core functionality for transmission of all Application Insights Telemetry Types and is a dependent package for all other Application Insights packages.</summary>
     <description>Application Insights Core API. This package provides core functionality for transmission of all Application Insights Telemetry Types and is a dependent package for all other Application Insights packages. Please install the platform specific package for the best experience. Privacy statement: https://go.microsoft.com/fwlink/?LinkId=512156</description>
     <copyright>$copyright$</copyright>
-    <releaseNotes>
-      You should not use this nuget package for Win Phone, WinStore and UWP applications. It is not supported starting 2.0.0.
-      For the release notes please follow http://go.microsoft.com/fwlink/?LinkId=535037</releaseNotes>
+	  <releaseNotes>
+		  You should not use this nuget package for Win Phone or WinStore apps for Windows 8 and 8.1. It is not supported starting 2.0.0.
+	  </releaseNotes>
     <tags>Analytics ApplicationInsights Telemetry AppInsights</tags>
     <dependencies>
       <group targetFramework="net40">
@@ -51,6 +51,16 @@
         <dependency id="System.Threading.Tasks" version="4.0.10" />
         <dependency id="System.Xml.XDocument" version="4.0.10" />
       </group>
+	<group targetFramework="uap10">
+		<dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="5.2.2" />
+		<dependency id="Microsoft.NETCore.Runtime.CoreCLR" version="1.0.4" />
+		<dependency id="System.Diagnostics.Tracing" version="4.1.0" />
+		<dependency id="System.Net.Http" version="4.1.0" />
+		<dependency id="System.Reflection" version="4.0.10" />
+		<dependency id="System.Reflection.Extensions" version="4.0.0" />
+		<dependency id="System.Runtime" version="4.1.0" />
+		<dependency id="System.Runtime.Extensions" version="4.1.0" />		
+	</group>
     </dependencies>
   </metadata>
   <files>
@@ -80,7 +90,10 @@
     <!-- portable-win81+wpa81: Windows Runtime projects (Phone & Store, Managed)-->
     <file src="$configuration$\Core\Managed\DummyCore\Portable81Files\Microsoft.ApplicationInsights.dll" target="lib\portable-win81+wpa81" />
 	
-	<!-- UWP-->
-    <file src="$configuration$\Core\Managed\DummyCore\Portable81Files\Microsoft.ApplicationInsights.dll" target="lib\uap10.0" />
+	<!-- Binaries for UWP-->
+	<file src="$configuration$\Core\Managed\Uwp\Microsoft.ApplicationInsights.dll" target="lib\uap10.0" />
+	<file src="$configuration$\Core\Managed\Uwp\Microsoft.ApplicationInsights.pdb" target="lib\uap10.0" />
+	<file src="$configuration$\Core\Managed\Uwp\Microsoft.ApplicationInsights.xml" target="lib\uap10.0" />
+	<file src="$configuration$\Core\Managed\Uwp\Microsoft.ApplicationInsights.pri" target="lib\uap10.0" />
   </files>
 </package>
