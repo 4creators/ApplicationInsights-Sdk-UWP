@@ -43,7 +43,7 @@
 				{
 					Action<AggregateException> exit = (a) => {
 						CoreEventSource.Log.LogError(a.Message, "UWP");
-						throw a;
+						throw new AggregateException(a);
 					};
 
 					if (aex.InnerException != null)
@@ -111,12 +111,7 @@
         /// </summary>
         public IDebugOutput GetDebugOutput()
         {
-            if (this.debugOutput == null)
-            {
-                this.debugOutput = new TelemetryDebugWriter(); 
-            }
-            
-            return this.debugOutput;
-        }
+			return this.debugOutput ?? (this.debugOutput = new TelemetryDebugWriter());
+		}
     }
 }
