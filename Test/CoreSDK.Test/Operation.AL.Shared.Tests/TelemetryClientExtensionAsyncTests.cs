@@ -18,7 +18,8 @@
 
 	// .NET Core on UWP does not support System.Threading.Thread yet, it is planned for v1.2
 	// Issue #2576 https://github.com/dotnet/corefx/issues/2576
-	/// TODO - enable for .NET Core v1.2 when available in UWP
+	/// TODO enable for .NET Core v1.2 when Thread is available in UWP or create wrapper 
+	/// for native thread methods which are available for UAP apps.
 #if !WINDOWS_UWP
     /// <summary>
     /// Tests corresponding to TelemetryClientExtension methods.

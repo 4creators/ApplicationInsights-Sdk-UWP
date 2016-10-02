@@ -38,6 +38,7 @@ namespace Microsoft.ApplicationInsights.Extensibility.Implementation.External
         Warning,
         Error,
         Critical,
+		None = 0xff,
     }
 } // AI
 
