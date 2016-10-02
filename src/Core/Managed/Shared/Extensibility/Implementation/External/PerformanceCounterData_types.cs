@@ -50,20 +50,20 @@ namespace Microsoft.ApplicationInsights.Extensibility.Implementation.External
         
         public DataPointType kind { get; set; }
 
-        
-        public int? count { get; set; }
 
-        
-        public double? min { get; set; }
+		public int count { get; set; }
 
-        
-        public double? max { get; set; }
 
-        
-        public double? stdDev { get; set; }
+		public double min { get; set; }
 
-        
-        public double value { get; set; }
+
+		public double max { get; set; }
+
+
+		public double stdDev { get; set; }
+
+
+		public double value { get; set; }
 
         
         public IDictionary<string, string> properties { get; set; }
