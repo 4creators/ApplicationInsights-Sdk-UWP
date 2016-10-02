@@ -68,6 +68,7 @@
         [TestMethod]
         public void ReadConfigurationXmlIgnoresMissingApplicationInsightsConfigurationFileByReturningEmptyString()
         {
+			PlatformSingleton.Current = new PlatformImplementation();
             string configuration = PlatformSingleton.Current.ReadConfigurationXml();
             Assert.IsNotNull(configuration);
             Assert.AreEqual(0, configuration.Length);
@@ -87,10 +88,9 @@
 #if !WINDOWS_UWP
 			File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ApplicationInsights.config"));
 #else
-			var task = ApplicationData.Current.LocalFolder.GetFileAsync("ApplicationInsights.config").AsTask();
-			task.Wait(10000);
-			if (task.IsCompleted && !task.IsFaulted)
-				task.Result.DeleteAsync(StorageDeleteOption.PermanentDelete).AsTask().Wait(10000);
+			string filePath = null;
+			if (File.Exists(filePath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "ApplicationInsights.config")))
+				File.Delete(filePath);
 #endif
 		}
 

@@ -21,23 +21,14 @@
 
         public string ReadConfigurationXml()
         {
-			// Config file should be in the base directory of the app domain
-			string configFilePath = Path.Combine(Package.Current.InstalledLocation.Path, "ApplicationInsights.config");
-			
+			string configFilePath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "ApplicationInsights.config");
+
 			try
 			{
-				Task<Stream> task = null;
-				try
+				try // TODO remove try catch when done with async file loads
 				{
-					task = ApplicationData.Current.LocalFolder.OpenStreamForReadAsync("ApplicationInsights.config");
-
-					task.Wait(15000);
-
-					if (task.IsCompleted && !task.IsFaulted)
-					{
-						using (var reader = new StreamReader(task.Result))
-							return reader.ReadToEnd();
-					}
+					if (File.Exists(configFilePath))
+						return File.ReadAllText(configFilePath);
 				}
 				catch(AggregateException aex)
 				{
