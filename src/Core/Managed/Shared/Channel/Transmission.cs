@@ -26,7 +26,7 @@
         internal const string ContentEncodingHeader = "Content-Encoding";
 
         private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(100);
-#if CORE_PCL || NETFX_CORE
+#if CORE_PCL
         private readonly HttpClient client;
 #endif
         private int isSending;

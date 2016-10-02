@@ -36,9 +36,9 @@ struct RemoteDependencyData
     110: required AI.DependencyKind 	 dependencyKind = Other;
     
     [Description("Indication of successfull or unsuccessfull call.")]
-    120: nullable<bool> 	 success = true;
+    120: bool 	 success = true;
     
-    130: nullable<bool> 	 async;
+    130: bool 	 async;
     
     140: AI.DependencySourceType 	 dependencySource = Undefined;
     
