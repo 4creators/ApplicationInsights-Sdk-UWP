@@ -49,7 +49,7 @@ namespace Microsoft.ApplicationInsights.Extensibility.Implementation.External
 
         
         
-        public SeverityLevel? severityLevel { get; set; }
+        public SeverityLevel severityLevel { get; set; }
 
         
         
