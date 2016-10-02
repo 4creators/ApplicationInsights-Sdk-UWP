@@ -364,12 +364,12 @@
                         writer.WriteEndArray();
                     }
 
-                    if (exceptionTelemetry.Data.severityLevel.HasValue)
-                    {
-                        writer.WriteProperty("severityLevel", exceptionTelemetry.Data.severityLevel.Value.ToString());
-                    }
+					if (exceptionTelemetry.Data.severityLevel != External.SeverityLevel.None)
+					{
+						writer.WriteProperty("severityLevel", exceptionTelemetry.Data.severityLevel.ToString());
+					}
 
-                    writer.WriteEndObject();
+					writer.WriteEndObject();
                 }
 
                 writer.WriteEndObject();

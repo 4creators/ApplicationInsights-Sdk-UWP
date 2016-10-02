@@ -5,10 +5,15 @@
     /// </summary>
     public enum SeverityLevel
     {
-        /// <summary>
-        /// Verbose severity level.
-        /// </summary>
-        Verbose,
+		/// <summary>
+		/// Replacement value for null used in nullable type
+		/// </summary>
+		None,
+
+		/// <summary>
+		/// Verbose severity level.
+		/// </summary>
+		Verbose,
 
         /// <summary>
         /// Information severity level.
@@ -29,5 +34,6 @@
         /// Critical severity level.
         /// </summary>
         Critical,
+
     }
 }

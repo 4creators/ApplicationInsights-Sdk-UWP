@@ -3,6 +3,7 @@ namespace AI
 [Description("Defines the level of severity for the event.")]
 enum SeverityLevel
 {
+	None,
     Verbose,
     Information,
     Warning,
