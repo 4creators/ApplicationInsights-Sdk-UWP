@@ -18,13 +18,13 @@ struct PerformanceCounterData
     
     60: AI.DataPointType 	 kind = Aggregation;
     
-    70: nullable<int32> 	 count;
+    70: int32 	 count;
     
-    80: nullable<double> 	 min;
+    80: double 	 min;
     
-    90: nullable<double> 	 max;
+    90: double 	 max;
     
-    100: nullable<double> 	 stdDev;
+    100: double 	 stdDev;
     
     110: required double 	 value;
     

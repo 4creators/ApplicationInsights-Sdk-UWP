@@ -785,7 +785,14 @@
             EventTelemetry eventTelemetry = new EventTelemetry("test");
             client.Track(eventTelemetry);
 
-            Assert.Equal("dotnet:"+ string.Join(".", versionParts[0], versionParts[1], versionParts[2]) + "-" + versionParts[3], eventTelemetry.Context.Internal.SdkVersion);
+			string prefix = null;
+#if !WINDOWS_UWP
+			prefix = "dotnet:";
+#else
+			prefix = "uwp:";
+#endif
+
+			Assert.Equal(prefix + string.Join(".", versionParts[0], versionParts[1], versionParts[2]) + "-" + versionParts[3], eventTelemetry.Context.Internal.SdkVersion);
         }
 
         [TestMethod]
@@ -802,9 +809,9 @@
             Assert.Equal("test", eventTelemetry.Context.Internal.SdkVersion);
         }
 
-        #endregion
+#endregion
 
-        #region Sampling
+#region Sampling
 
         [TestMethod]
         public void AllTelemetryIsSentWithDefaultSamplingRate()
@@ -825,9 +832,9 @@
             Assert.Equal(ItemsToGenerate, sentTelemetry.Count);
         }
 
-        #endregion
+#endregion
 
-        #region ValidateEndpoint
+#region ValidateEndpoint
 
         [TestMethod]
         public void SendEventToValidateEndpoint()
@@ -894,7 +901,7 @@
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         }
 
-        #endregion
+#endregion
 
         private TelemetryClient InitializeTelemetryClient(ICollection<ITelemetry> sentTelemetry)
         {

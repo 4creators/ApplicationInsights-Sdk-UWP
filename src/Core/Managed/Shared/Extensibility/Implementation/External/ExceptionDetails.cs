@@ -5,7 +5,7 @@
     /// <summary>
     /// Additional implementation for ExceptionDetails.
     /// </summary>
-#if NET46
+#if NET46 || NETFX_CORE
     [System.Diagnostics.Tracing.EventData]
 #elif NET40
     [Microsoft.Diagnostics.Tracing.EventData]
