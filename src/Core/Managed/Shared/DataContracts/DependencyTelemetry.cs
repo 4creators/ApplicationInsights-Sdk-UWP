@@ -135,7 +135,7 @@ namespace Microsoft.ApplicationInsights.DataContracts
         public override bool? Success
         {
             get { return this.Data.success; }
-            set { this.Data.success = value; }
+            set { this.Data.success = value.GetValueOrDefault(); }
         }
 
         /// <summary>

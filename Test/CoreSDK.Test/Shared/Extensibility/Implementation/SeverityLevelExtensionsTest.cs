@@ -16,11 +16,11 @@
         [TestMethod]
         public void TranslateSeverityLevelConvertsAllValueFromSdkToDp()
         {
-            Assert.Equal(DpSeverityLevel.Verbose, SeverityLevelExtensions.TranslateSeverityLevel(SeverityLevel.Verbose));
-            Assert.Equal(DpSeverityLevel.Warning, SeverityLevelExtensions.TranslateSeverityLevel(SeverityLevel.Warning));
-            Assert.Equal(DpSeverityLevel.Information, SeverityLevelExtensions.TranslateSeverityLevel(SeverityLevel.Information));
-            Assert.Equal(DpSeverityLevel.Error, SeverityLevelExtensions.TranslateSeverityLevel(SeverityLevel.Error));
-            Assert.Equal(DpSeverityLevel.Critical, SeverityLevelExtensions.TranslateSeverityLevel(SeverityLevel.Critical));
+			Assert.Equal(DpSeverityLevel.Verbose, SeverityLevelExtensions.TranslateSeverityLevel((SeverityLevel?)SeverityLevel.Verbose));
+			Assert.Equal(DpSeverityLevel.Warning, SeverityLevelExtensions.TranslateSeverityLevel((SeverityLevel?)SeverityLevel.Warning));
+			Assert.Equal(DpSeverityLevel.Information, SeverityLevelExtensions.TranslateSeverityLevel((SeverityLevel?)SeverityLevel.Information));
+			Assert.Equal(DpSeverityLevel.Error, SeverityLevelExtensions.TranslateSeverityLevel((SeverityLevel?)SeverityLevel.Error));
+			Assert.Equal(DpSeverityLevel.Critical, SeverityLevelExtensions.TranslateSeverityLevel((SeverityLevel?)SeverityLevel.Critical));
         }
 
         [TestMethod]

@@ -140,7 +140,7 @@
         public SeverityLevel? SeverityLevel
         {
             get { return this.Data.severityLevel.TranslateSeverityLevel(); }
-            set { this.Data.severityLevel = value.TranslateSeverityLevel(); }
+            set { this.Data.severityLevel = value.TranslateSeverityLevel().GetValueOrDefault(); }
         }
 
         /// <summary>

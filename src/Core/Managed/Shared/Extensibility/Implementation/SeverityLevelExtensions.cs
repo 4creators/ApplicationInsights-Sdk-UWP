@@ -13,31 +13,44 @@
                 return null;
             }
 
-            switch (sdkSeverityLevel.Value)
-            {
-                case SeverityLevel.Critical: return DpSeverityLevel.Critical;
-                case SeverityLevel.Error: return DpSeverityLevel.Error;
-                case SeverityLevel.Warning: return DpSeverityLevel.Warning;
-                case SeverityLevel.Information: return DpSeverityLevel.Information;
-                default: return DpSeverityLevel.Verbose;
-            }
+			return sdkSeverityLevel.Value.TranslateSeverityLevel();
         }
 
-        public static SeverityLevel? TranslateSeverityLevel(this DpSeverityLevel? dataPlatformSeverityLevel)
+		public static DpSeverityLevel? TranslateSeverityLevel(this SeverityLevel sdkSeverityLevel)
+		{
+			switch (sdkSeverityLevel)
+			{
+				case SeverityLevel.Critical: return DpSeverityLevel.Critical;
+				case SeverityLevel.Error: return DpSeverityLevel.Error;
+				case SeverityLevel.Warning: return DpSeverityLevel.Warning;
+				case SeverityLevel.Information: return DpSeverityLevel.Information;
+				case SeverityLevel.None: return DpSeverityLevel.None;
+				default: return DpSeverityLevel.Verbose;
+			}
+		}
+
+		public static SeverityLevel? TranslateSeverityLevel(this DpSeverityLevel? dataPlatformSeverityLevel)
         {
             if (dataPlatformSeverityLevel == null)
             {
                 return null;
             }
 
-            switch (dataPlatformSeverityLevel.Value)
-            {
-                case DpSeverityLevel.Critical: return SeverityLevel.Critical;
-                case DpSeverityLevel.Error: return SeverityLevel.Error;
-                case DpSeverityLevel.Warning: return SeverityLevel.Warning;
-                case DpSeverityLevel.Information: return SeverityLevel.Information;
-                default: return SeverityLevel.Verbose;
-            }
+			return dataPlatformSeverityLevel.Value.TranslateSeverityLevel();
         }
-    }
+
+		public static SeverityLevel? TranslateSeverityLevel(this DpSeverityLevel dataPlatformSeverityLevel)
+		{
+			// TODO Rethink None / null replacement
+			switch (dataPlatformSeverityLevel)
+			{
+				case DpSeverityLevel.Critical: return SeverityLevel.Critical;
+				case DpSeverityLevel.Error: return SeverityLevel.Error;
+				case DpSeverityLevel.Warning: return SeverityLevel.Warning;
+				case DpSeverityLevel.Information: return SeverityLevel.Information;
+				case DpSeverityLevel.None: return SeverityLevel.None;
+				default: return SeverityLevel.Verbose;
+			}
+		}
+	}
 }

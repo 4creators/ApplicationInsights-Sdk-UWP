@@ -29,5 +29,10 @@
         /// Critical severity level.
         /// </summary>
         Critical,
+
+		/// <summary>
+		/// Replacement value for null used in nullable type
+		/// </summary>
+		None = 0xff,
     }
 }
