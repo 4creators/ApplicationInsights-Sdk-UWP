@@ -70,6 +70,7 @@ namespace Microsoft.ApplicationInsights.Extensibility.Implementation.External
         {
             this.name = "";
             kind = DataPointType.Measurement;
+
         }
     }
 } // AI

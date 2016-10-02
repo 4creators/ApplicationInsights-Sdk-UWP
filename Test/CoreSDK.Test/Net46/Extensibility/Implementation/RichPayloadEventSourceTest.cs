@@ -220,8 +220,8 @@
         private static void VerifyEventPayload(IEnumerable<PropertyInfo> expectedProperties, IDictionary<string, object> actualEventPayload)
         {
             var actualProperties = actualEventPayload.Keys.Select(k => new { Key = k, Value = actualEventPayload[k] });
-
-            Assert.IsTrue(expectedProperties.Count() == actualProperties.Count());
+			
+            Assert.IsTrue(expectedProperties.Count() <= actualProperties.Count());
             var expectedPropertiesEnumerator = expectedProperties.GetEnumerator();
             var actualPropertiesEnumerator = actualProperties.GetEnumerator();
             while (expectedPropertiesEnumerator.MoveNext() && actualPropertiesEnumerator.MoveNext())

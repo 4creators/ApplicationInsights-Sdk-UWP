@@ -114,12 +114,16 @@
                 }
 
                 var telemetryItem = item as MetricTelemetry;
-                this.WriteEvent(
-                    MetricTelemetry.TelemetryName,
-                    telemetryItem.Context.InstrumentationKey,
-                    telemetryItem.Context.Tags,
-                    telemetryItem.Data,
-                    Keywords.Metrics);
+				this.WriteEvent(
+					MetricTelemetry.TelemetryName,
+					telemetryItem.Context.InstrumentationKey,
+					telemetryItem.Context.Tags,
+#if !NETFX_CORE
+					telemetryItem.Data,
+#else
+					new External.EtwMetricData(telemetryItem.Data),
+#endif
+					Keywords.Metrics);
             }
             else if (item is ExceptionTelemetry)
             {
