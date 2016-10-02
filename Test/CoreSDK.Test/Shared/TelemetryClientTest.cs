@@ -263,7 +263,7 @@
             client.TrackException(new Exception());
 
             var exceptionTelemetry = (ExceptionTelemetry)sentTelemetry.Single();
-            Assert.Equal(SeverityLevel.None, exceptionTelemetry.SeverityLevel);
+            Assert.Equal(null, exceptionTelemetry.SeverityLevel);
         }
 
         #endregion

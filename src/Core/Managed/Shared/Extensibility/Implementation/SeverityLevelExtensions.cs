@@ -24,7 +24,7 @@
 				case SeverityLevel.Error: return DpSeverityLevel.Error;
 				case SeverityLevel.Warning: return DpSeverityLevel.Warning;
 				case SeverityLevel.Information: return DpSeverityLevel.Information;
-				case SeverityLevel.None: return DpSeverityLevel.None;
+				case SeverityLevel.None: return null;
 				default: return DpSeverityLevel.Verbose;
 			}
 		}
@@ -48,7 +48,7 @@
 				case DpSeverityLevel.Error: return SeverityLevel.Error;
 				case DpSeverityLevel.Warning: return SeverityLevel.Warning;
 				case DpSeverityLevel.Information: return SeverityLevel.Information;
-				case DpSeverityLevel.None: return SeverityLevel.None;
+				case DpSeverityLevel.None: return null;
 				default: return SeverityLevel.Verbose;
 			}
 		}
