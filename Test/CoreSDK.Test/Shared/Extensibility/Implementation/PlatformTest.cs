@@ -68,8 +68,8 @@
         [TestMethod]
         public void ReadConfigurationXmlIgnoresMissingApplicationInsightsConfigurationFileByReturningEmptyString()
         {
-			PlatformSingleton.Current = new PlatformImplementation();
-            string configuration = PlatformSingleton.Current.ReadConfigurationXml();
+			var platform = new PlatformImplementation();
+            string configuration = platform.ReadConfigurationXml();
             Assert.IsNotNull(configuration);
             Assert.AreEqual(0, configuration.Length);
         }
