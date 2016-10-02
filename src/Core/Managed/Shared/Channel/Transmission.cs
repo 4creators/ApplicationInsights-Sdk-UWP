@@ -57,7 +57,7 @@
             this.ContentEncoding = contentEncoding;
             this.Timeout = timeout == default(TimeSpan) ? DefaultTimeout : timeout;
             this.Id = Convert.ToBase64String(BitConverter.GetBytes(WeakConcurrentRandom.Instance.Next()));
-#if CORE_PCL || NETFX_CORE
+#if CORE_PCL
 			this.client = new HttpClient() { Timeout = this.Timeout };
 #endif
         }
@@ -140,7 +140,7 @@
 
             try
             {
-#if CORE_PCL || NETFX_CORE
+#if CORE_PCL
                 using (MemoryStream contentStream = new MemoryStream(this.Content))
                 {
                     HttpRequestMessage request = this.CreateRequestMessage(this.EndpointAddress, contentStream);
