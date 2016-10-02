@@ -140,7 +140,7 @@
 
             try
             {
-#if CORE_PCL || NETFX_CORE
+#if CORE_PCL
                 using (MemoryStream contentStream = new MemoryStream(this.Content))
                 {
                     HttpRequestMessage request = this.CreateRequestMessage(this.EndpointAddress, contentStream);
